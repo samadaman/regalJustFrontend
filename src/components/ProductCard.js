@@ -4,9 +4,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Star, ShoppingBag, Heart } from 'lucide-react';
 import { useState } from 'react';
+import { useCart } from '../context/CartContext';
+import toast from 'react-hot-toast';
 
 export default function ProductCard({ product }) {
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const { addToCart } = useCart();
 
   // Render star rating
   const renderStars = (rating) => {
@@ -131,9 +134,10 @@ export default function ProductCard({ product }) {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              // Add to cart logic here
+              addToCart(product);
+              toast.success(`${product.name} added to cart!`);
             }}
-            className="bg-[#2C2416] text-white p-2.5 hover:bg-[#3D3020] transition-colors duration-300 group/btn"
+            className="bg-[#2C2416] text-white p-2.5 hover:bg-[#3D3020] transition-colors duration-300 group/btn cursor-pointer"
           >
             <ShoppingBag className="w-4.5 h-4.5 group-hover/btn:scale-110 transition-transform" />
           </button>
