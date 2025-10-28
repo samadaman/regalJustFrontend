@@ -123,9 +123,7 @@ useEffect(() => {
                       <span className="text-xs text-[#5C4A3A] uppercase tracking-wider block mb-1">From</span>
                       <span className="text-4xl font-serif text-[#2C2416]">₹599</span>
                     </div>
-                    <button className="bg-[#2C2416] text-[#F5F1E8] p-4 hover:bg-[#3D3020] transition-colors duration-500">
-                      <ShoppingBag className="w-5 h-5" />
-                    </button>
+                    
                   </div>
                 </div>
               </div>
@@ -136,7 +134,7 @@ useEffect(() => {
               </div>
 
               {/* Vintage Stamp Effect */}
-              <div className="absolute -bottom-6 -left-6 z-30 w-24 h-24 border-2 border-[#8B7355] rounded-full flex items-center justify-center bg-[#FAF8F3] shadow-lg animate-subtle-float-delayed">
+              <div className="absolute -bottom-2 -right-6 z-30 w-24 h-24 border-2 border-[#8B7355] rounded-full flex items-center justify-center bg-[#FAF8F3] shadow-lg animate-subtle-float-delayed">
                 <div className="text-center">
                   <div className="text-xs font-serif text-[#8B7355] uppercase tracking-wider">Limited</div>
                   <div className="text-lg font-serif text-[#2C2416] font-bold">50</div>

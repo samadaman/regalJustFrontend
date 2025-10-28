@@ -39,7 +39,7 @@ export default function Header() {
                 height={45} 
                 className="mr-2 md:mr-3"
               />
-              <span className="hidden sm:block">Regal Old Money</span>
+              <span className="hidden sm:block">Regal</span>
             </Link>
           </div>
 
