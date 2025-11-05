@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { getProductById, getFeaturedProducts } from '../../../productsData';
+import { getProductById, products } from '../../../productsData';
 import { Star, ShoppingCart, Heart, Truck, Shield, RefreshCw, ChevronLeft, Check, Minus, Plus, ChevronRight, ArrowLeft, ArrowRight } from 'lucide-react';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
@@ -24,7 +24,87 @@ export default function ProductDetailPage() {
   const [addedToCart, setAddedToCart] = useState(false);
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [autoScrollInterval, setAutoScrollInterval] = useState(null);
   const { addToCart } = useCart();
+
+  // Auto-scroll functionality with infinite loop
+  useEffect(() => {
+    const container = document.getElementById('featured-products-scroll');
+    if (!container) return;
+    
+    // Clone first few items and append to end for infinite scroll
+    const items = container.querySelectorAll('.product-item');
+    if (items.length > 0) {
+      // Store original items
+      const originalItems = Array.from(items).map(item => item.outerHTML).join('');
+      
+      // Append clones to create infinite effect
+      container.innerHTML += originalItems;
+      
+      // Reset scroll position to the first original item
+      container.scrollLeft = 0;
+    }
+    
+    let isScrolling = false;
+    
+    const startAutoScroll = () => {
+      return setInterval(() => {
+        if (container && !isScrolling) {
+          isScrolling = true;
+          const itemWidth = 300; // Width of each product card + gap
+          const scrollAmount = itemWidth;
+          const maxScroll = container.scrollWidth - container.clientWidth;
+          
+          // Smooth scroll to next position
+          container.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+          });
+          
+          // Reset to first item when reaching the end of original items
+          setTimeout(() => {
+            if (container.scrollLeft >= maxScroll / 2) {
+              container.scrollTo({
+                left: 0,
+                behavior: 'auto' // No animation for the reset
+              });
+            }
+            isScrolling = false;
+          }, 800); // Wait for scroll to complete
+        }
+      }, 3000); // Change slide every 3 seconds
+    };
+
+    // Start auto-scroll
+    const interval = startAutoScroll();
+    setAutoScrollInterval(interval);
+
+    // Pause on hover
+    const pauseOnHover = () => {
+      if (interval) clearInterval(interval);
+    };
+
+    const resumeOnLeave = () => {
+      if (!autoScrollInterval) {
+        const newInterval = startAutoScroll();
+        setAutoScrollInterval(newInterval);
+      }
+    };
+
+    if (container) {
+      container.addEventListener('mouseenter', pauseOnHover);
+      container.addEventListener('mouseleave', resumeOnLeave);
+    }
+
+    // Cleanup
+    return () => {
+      if (interval) clearInterval(interval);
+      if (container) {
+        container.removeEventListener('mouseenter', pauseOnHover);
+        container.removeEventListener('mouseleave', resumeOnLeave);
+      }
+    };
+  }, [featuredProducts.length]);
 
   useEffect(() => {
     const productData = getProductById(parseInt(params.id));
@@ -34,9 +114,15 @@ export default function ProductDetailPage() {
       setSelectedColor(productData.colors[0]);
     }
     
-    // Get featured products excluding current product
-    const featured = getFeaturedProducts().filter(p => p.id !== parseInt(params.id));
-    setFeaturedProducts(featured);
+    // Get all products except the current one
+    const allProducts = products.filter(p => p.id !== parseInt(params.id));
+    setFeaturedProducts(allProducts);
+    
+    // Reset auto-scroll when product changes
+    if (autoScrollInterval) {
+      clearInterval(autoScrollInterval);
+      setAutoScrollInterval(null);
+    }
   }, [params.id]);
 
   const handleAddToCart = () => {
@@ -345,40 +431,33 @@ export default function ProductDetailPage() {
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white border-t border-[#E8E2D5]">
           <div className="max-w-7xl mx-auto">
             {/* Section Header */}
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-serif text-[#2C2416] mb-2">
-                  You May Also Like
-                </h2>
-                <p className="text-sm text-[#5C4A3A] font-light">
-                  Handpicked products just for you
-                </p>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
+              <div className="mb-4 sm:mb-0">
+                <h2 className="text-2xl font-bold text-[#2C2416]">You May Also Like</h2>
+                <p className="text-gray-600 text-sm mt-1">Discover our complete collection</p>
               </div>
-              <div className="flex items-center gap-4">
-                {/* Scroll Buttons */}
-                <div className="hidden md:flex items-center gap-2">
-                  <button
-                    onClick={scrollLeft}
-                    className="p-2 border border-[#E8E2D5] hover:border-[#2C2416] hover:bg-[#F5F1E8] transition-colors"
-                    aria-label="Scroll left"
-                  >
-                    <ArrowLeft className="w-5 h-5 text-[#5C4A3A]" />
-                  </button>
-                  <button
-                    onClick={scrollRight}
-                    className="p-2 border border-[#E8E2D5] hover:border-[#2C2416] hover:bg-[#F5F1E8] transition-colors"
-                    aria-label="Scroll right"
-                  >
-                    <ArrowRight className="w-5 h-5 text-[#5C4A3A]" />
-                  </button>
-                </div>
-                <button 
-                  onClick={() => router.push('/')}
-                  className="flex items-center gap-2 text-sm text-[#8B7355] hover:text-[#2C2416] transition-colors font-medium"
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={scrollLeft}
+                  className="p-2 rounded-full border border-[#E8E2D5] hover:border-[#2C2416] hover:bg-[#F5F1E8] transition-colors"
+                  aria-label="Scroll left"
+                >
+                  <ArrowLeft className="w-5 h-5 text-[#5C4A3A]" />
+                </button>
+                <button
+                  onClick={scrollRight}
+                  className="p-2 rounded-full border border-[#E8E2D5] hover:border-[#2C2416] hover:bg-[#F5F1E8] transition-colors"
+                  aria-label="Scroll right"
+                >
+                  <ArrowRight className="w-5 h-5 text-[#5C4A3A]" />
+                </button>
+                <Link 
+                  href="/products"
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm text-[#8B7355] hover:bg-[#F5F1E8] rounded-full transition-colors font-medium border border-[#E8E2D5]"
                 >
                   View All
                   <ChevronRight className="w-4 h-4" />
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -386,14 +465,17 @@ export default function ProductDetailPage() {
             <div className="relative">
               <div 
                 id="featured-products-scroll"
-                className="flex gap-6 overflow-x-auto scroll-smooth pb-4 scrollbar-hide"
+                className="flex gap-6 overflow-x-auto scroll-smooth pb-6 scrollbar-hide snap-x snap-mandatory touch-pan-x"
                 style={{
                   scrollbarWidth: 'none',
                   msOverflowStyle: 'none',
                 }}
               >
-                {featuredProducts.map((featuredProduct) => (
-                  <div key={featuredProduct.id} className="flex-none w-[280px] sm:w-[300px]">
+                {[...featuredProducts, ...featuredProducts].map((featuredProduct, index) => (
+                  <div 
+                    key={`${featuredProduct.id}-${index}`} 
+                    className="flex-none w-[280px] sm:w-[300px] snap-center product-item"
+                  >
                     <ProductCard product={featuredProduct} />
                   </div>
                 ))}

@@ -33,7 +33,7 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="group bg-white border border-[#E8E2D5] hover:border-[#D4C4B0] overflow-hidden transition-all duration-300 hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+    <div className="group bg-white border border-[#E8E2D5] hover:border-[#D4C4B0] overflow-hidden transition-all duration-300 hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] h-full flex flex-col">
       {/* Product Image */}
       <Link href={`/product/${product.id}`}>
         <div className="relative aspect-[3/4] bg-[#F5F1E8] overflow-hidden cursor-pointer">
@@ -86,16 +86,16 @@ export default function ProductCard({ product }) {
       </Link>
 
       {/* Product Info */}
-      <div className="p-5">
+      <div className="p-3 sm:p-4 md:p-5 flex-1 flex flex-col">
         {/* Category & Brand */}
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-1.5 sm:mb-2">
           {product.category && (
-            <span className="text-[10px] text-[#8B7355] uppercase tracking-[0.1em] font-medium">
+            <span className="text-[10px] text-[#8B7355] uppercase tracking-[0.1em] font-medium font-gray-500">
               {product.category}
             </span>
           )}
           {product.brand && (
-            <span className="text-[10px] text-[#5C4A3A] uppercase tracking-wider font-light">
+            <span className="text-[10px] text-[#5C4A3A] uppercase tracking-wider font-light text-gray-500">
               {product.brand}
             </span>
           )}
@@ -103,50 +103,53 @@ export default function ProductCard({ product }) {
 
         {/* Product Name */}
         <Link href={`/product/${product.id}`}>
-          <h3 className="text-base font-serif text-[#2C2416] mb-2.5 line-clamp-2 leading-snug min-h-[2.8rem] hover:text-[#8B7355] transition-colors cursor-pointer">
+          <h3 className="text-sm sm:text-base font-serif text-[#2C2416] mb-2 sm:mb-2.5 line-clamp-2 leading-snug min-h-[2.5rem] sm:min-h-[2.8rem] hover:text-[#8B7355] transition-colors cursor-pointer">
             {product.name}
           </h3>
         </Link>
 
         {/* Rating */}
         {product.rating && (
-          <div className="mb-3">
+          <div className="mb-2 sm:mb-3">
             {renderStars(product.rating)}
           </div>
         )}
 
         {/* Material Info */}
         {product.material && (
-          <p className="text-xs text-[#5C4A3A] mb-3 font-light">
+          <p className="text-[10px] sm:text-xs text-[#5C4A3A] mb-2 sm:mb-3 font-light">
             {product.material} • {product.gsm} GSM
           </p>
         )}
 
         {/* Price & Add to Cart */}
-        <div className="flex items-center justify-between pt-3 border-t border-[#E8E2D5]">
-          <div className="flex flex-col">
-            <span className="text-xs text-[#8B7355] uppercase tracking-wider mb-0.5">Price</span>
-            <span className="text-xl font-serif text-[#2C2416] font-medium">
-              ₹{product.price.toLocaleString('en-IN')}
-            </span>
+        <div className="mt-auto pt-2 sm:pt-3 border-t border-[#E8E2D5]">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className="text-[10px] sm:text-xs text-[#8B7355] uppercase tracking-wider">Price</span>
+              <span className="block text-base sm:text-xl font-serif text-[#2C2416] font-medium leading-tight">
+                ₹{product.price.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                addToCart(product);
+                toast.success(`${product.name} added to cart!`);
+              }}
+              className="bg-[#2C2416] text-white p-1.5 sm:p-2 md:p-2.5 hover:bg-[#3D3020] transition-colors duration-300 group/btn cursor-pointer rounded"
+              aria-label="Add to cart"
+            >
+              <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 group-hover/btn:scale-110 transition-transform" />
+            </button>
           </div>
-          <button 
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              addToCart(product);
-              toast.success(`${product.name} added to cart!`);
-            }}
-            className="bg-[#2C2416] text-white p-2.5 hover:bg-[#3D3020] transition-colors duration-300 group/btn cursor-pointer"
-          >
-            <ShoppingBag className="w-4.5 h-4.5 group-hover/btn:scale-110 transition-transform" />
-          </button>
         </div>
 
         {/* Size Indicators */}
         {product.sizes && product.sizes.length > 0 && (
-          <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-[#E8E2D5]">
-            <span className="text-[10px] text-[#8B7355] uppercase tracking-wider mr-1">Sizes:</span>
+          <div className="flex items-center gap-1 mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-[#E8E2D5]">
+            <span className="text-[9px] sm:text-[10px] text-[#8B7355] uppercase tracking-wider mr-1">Sizes:</span>
             {product.sizes.slice(0, 5).map((size, index) => (
               <span 
                 key={index}
@@ -159,5 +162,7 @@ export default function ProductCard({ product }) {
         )}
       </div>
     </div>
+
+
   );
 }

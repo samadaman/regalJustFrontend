@@ -15,7 +15,7 @@ export default function ProductGrid() {
   const getGridColsClass = (cols) => {
     switch(cols) {
       case 2: return 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3';
-      case 3: return 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3';
+      case 3: return 'grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3';
       case 4: 
       default: 
         return 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
@@ -129,7 +129,7 @@ export default function ProductGrid() {
         </div>
 
         {/* Products Grid */}
-        <div className={`grid ${getGridColsClass(gridCols)} gap-4 sm:gap-6`}>
+        <div className={`grid ${getGridColsClass(gridCols)} gap-2.5 sm:gap-3 md:gap-4 lg:gap-6`}>
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

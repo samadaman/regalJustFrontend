@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "../context/CartContext";
 import { Toaster } from "react-hot-toast";
+import ToastNotification from "@/components/ToastNotification";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,9 +66,9 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+function RootLayoutContent({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/regalLogoWhite.jpg" />
@@ -80,6 +81,7 @@ export default function RootLayout({ children }) {
       >
         <CartProvider>
           {children}
+          <ToastNotification />
           <Toaster
             position="top-right"
             toastOptions={{
@@ -94,4 +96,13 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   );
+}
+
+export default function RootLayout({ children }) {
+  // This is a workaround for the crxlauncher attribute added by browser extensions
+  if (typeof window === 'undefined') {
+    return <RootLayoutContent>{children}</RootLayoutContent>;
+  }
+  
+  return <RootLayoutContent>{children}</RootLayoutContent>;
 }
