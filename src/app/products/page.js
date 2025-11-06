@@ -1,5 +1,5 @@
 // src/app/products/page.js
-'client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { products } from '../../productsData';
