@@ -131,18 +131,20 @@ export default function ProductCard({ product }) {
                 ₹{product.price.toLocaleString('en-IN')}
               </span>
             </div>
-            <button 
+            <Link 
+              href={`/product/${product.id}`}
               onClick={(e) => {
-                e.preventDefault();
                 e.stopPropagation();
-                addToCart(product);
-                toast.success(`${product.name} added to cart!`);
               }}
-              className="bg-[#2C2416] text-white p-1.5 sm:p-2 md:p-2.5 hover:bg-[#3D3020] transition-colors duration-300 group/btn cursor-pointer rounded"
-              aria-label="Add to cart"
+              className="relative group/icon bg-[#2C2416] text-white p-2 sm:p-2.5 hover:bg-[#3D3020] transition-colors duration-300 rounded-full flex items-center justify-center"
+              aria-label="View product details"
+              title="View product details"
             >
-              <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 group-hover/btn:scale-110 transition-transform" />
-            </button>
+              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 group-hover/icon:scale-110 transition-transform" />
+              <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover/icon:opacity-100 transition-opacity pointer-events-none">
+                View Details
+              </span>
+            </Link>
           </div>
         </div>
 

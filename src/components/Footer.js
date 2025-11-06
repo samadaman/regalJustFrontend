@@ -196,22 +196,25 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-[#D4C4B0]/20 pt-8 mt-8 text-center px-4">
-          <p className="text-xs  text-[#8B7355] flex flex-wrap items-center justify-center gap-1 sm:gap-2">
-            <span className="flex items-center">
-              <Heart className="w-4 h-4 text-red-400 mx-1" aria-hidden="true" />
-              {currentYear} Regal Authorized Team. Crafted with elegance by
+        <div className="border-t border-[#D4C4B0]/20 pt-6 md:pt-8 mt-8 text-center px-4 w-full">
+          <p className="text-xs text-[#8B7355] flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 sm:gap-2">
+            <span className="inline-flex items-center justify-center w-full sm:w-auto mb-1 sm:mb-0">
+              <Heart className="w-4 h-4 text-red-400 mx-1 flex-shrink-0" aria-hidden="true" />
+              {currentYear} Regal Authorized Team.
             </span>
-            <a 
-              href="https://www.linkedin.com/in/samadaman/" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-[#D4C4B0] hover:text-white transition-colors duration-200 font-medium flex items-center"
-              aria-label="Visit Samad Aman's LinkedIn profile (opens in a new tab)"
-            >
-              Samad Aman
-              <span className="sr-only">(opens in a new tab)</span>
-            </a>
+            <span className="inline-flex items-center justify-center w-full sm:w-auto">
+              Crafted with elegance by
+              <a 
+                href="https://www.linkedin.com/in/samadaman/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-[#D4C4B0] hover:text-white transition-colors duration-200 font-medium ml-1"
+                aria-label="Visit Samad Aman's LinkedIn profile (opens in a new tab)"
+              >
+                Samad Aman
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
+            </span>
           </p>
         </div>
       </div>

@@ -9,6 +9,7 @@ import { Star, ShoppingCart, Heart, Truck, Shield, RefreshCw, ChevronLeft, Check
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import ProductCard from '../../../components/ProductCard';
+import CheckoutModal from '../../../components/CheckoutModal';
 import { useCart } from '../../../context/CartContext';
 import Link from 'next/link';
 
@@ -25,6 +26,7 @@ export default function ProductDetailPage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [autoScrollInterval, setAutoScrollInterval] = useState(null);
+  const [showCheckout, setShowCheckout] = useState(false);
   const { addToCart } = useCart();
 
   // Auto-scroll functionality with infinite loop
@@ -134,6 +136,20 @@ export default function ProductDetailPage() {
     );
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
+  };
+
+  const handleBuyNow = () => {
+    // Add to cart first
+    const cartItem = {
+      ...product,
+      quantity: quantity,
+      size: selectedSize,
+      color: selectedColor,
+      price: product.price // Ensure price is included
+    };
+    
+    // Open checkout modal with the selected product
+    setShowCheckout(true);
   };
 
   const scrollLeft = () => {
@@ -389,7 +405,10 @@ export default function ProductDetailPage() {
                   </>
                 )}
               </button>
-              <button className="border-2 cursor-pointer border-[#2C2416] text-[#2C2416] py-4 px-8 font-medium hover:bg-[#2C2416] hover:text-white transition-colors">
+              <button 
+                onClick={handleBuyNow}
+                className="border-2 cursor-pointer border-[#2C2416] text-[#2C2416] py-4 px-8 font-medium hover:bg-[#2C2416] hover:text-white transition-colors"
+              >
                 Buy Now
               </button>
             </div>
@@ -486,6 +505,20 @@ export default function ProductDetailPage() {
       )}
 
       <Footer />
+      
+      {/* Checkout Modal */}
+      <CheckoutModal 
+        isOpen={showCheckout} 
+        onClose={() => setShowCheckout(false)} 
+        cart={[{
+          ...product,
+          quantity: quantity,
+          size: selectedSize,
+          color: selectedColor,
+          total: product.price * quantity
+        }]}
+        cartTotal={product.price * quantity}
+      />
     </div>
   );
 }

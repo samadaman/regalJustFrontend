@@ -88,6 +88,44 @@ export function CartProvider({ children }) {
     setCart([]);
   };
 
+  const updateCartItemSize = (item, newSize) => {
+    setCart(prevCart => {
+      // Create a new cart array to avoid mutating the state directly
+      const newCart = [...prevCart];
+      
+      // Find the index of the item we want to update
+      const itemIndex = newCart.findIndex(cartItem => 
+        cartItem.id === item.id && 
+        cartItem.size === item.size && 
+        cartItem.color === item.color
+      );
+      
+      // If item not found, return the current cart
+      if (itemIndex === -1) return prevCart;
+      
+      // Check if an item with the new size already exists
+      const existingItemIndex = newCart.findIndex(cartItem => 
+        cartItem.id === item.id && 
+        cartItem.size === newSize && 
+        cartItem.color === item.color
+      );
+      
+      if (existingItemIndex >= 0) {
+        // If item with new size exists, update its quantity and remove the old one
+        newCart[existingItemIndex].quantity += newCart[itemIndex].quantity;
+        newCart.splice(itemIndex, 1);
+      } else {
+        // Otherwise, update the size of the existing item
+        newCart[itemIndex] = {
+          ...newCart[itemIndex],
+          size: newSize
+        };
+      }
+      
+      return newCart;
+    });
+  };
+
   // Calculate cart total
   const cartTotal = cart.reduce(
     (total, item) => total + (item.price * item.quantity),
@@ -104,9 +142,11 @@ export function CartProvider({ children }) {
     <CartContext.Provider
       value={{
         cart,
+        setCart,
         addToCart,
         removeFromCart,
         updateQuantity,
+        updateCartItemSize,
         clearCart,
         cartTotal,
         itemCount,

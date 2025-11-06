@@ -9,7 +9,7 @@ import Image from 'next/image';
 export default function CheckoutModal({ isOpen, onClose, cart = [], cartTotal = 0, onSubmit }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('cod');
+  const [paymentMethod, setPaymentMethod] = useState('Online');
   const modalRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -77,7 +77,7 @@ export default function CheckoutModal({ isOpen, onClose, cart = [], cartTotal = 
         `City: ${formData.city}\n` +
         `State: ${formData.state}\n` +
         `Pincode: ${formData.pincode}\n` +
-        `Payment Method: ${paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online'}\n\n` +
+        `Payment Method: Online\n\n` +
         `*Order Summary:*\n${orderSummary}\n\n` +
         `*Total Amount: ₹${cartTotal.toFixed(2)}*`;
 
@@ -325,51 +325,17 @@ export default function CheckoutModal({ isOpen, onClose, cart = [], cartTotal = 
                       Payment Method
                     </h3>
                     <div className="space-y-3">
-                      <motion.label 
-                        className={`flex items-center p-4 border rounded-lg transition-all cursor-pointer ${
-                          paymentMethod === 'cod' 
-                            ? 'border-[#8B7355] bg-[#8B7355]/5' 
-                            : 'border-gray-200 hover:border-[#8B7355]'
-                        }`}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <input
-                          type="radio"
-                          name="paymentMethod"
-                          value="cod"
-                          checked={paymentMethod === 'cod'}
-                          onChange={() => handlePaymentMethodChange('cod')}
-                          className="h-4 w-4 text-[#8B7355] focus:ring-[#8B7355] border-gray-300"
-                        />
-                        <div className="ml-3">
-                          <span className="block text-sm font-medium text-gray-900">Cash on Delivery (COD)</span>
-                          <span className="block text-sm text-gray-500">Pay when you receive your order</span>
+                      <div className="p-4 border border-[#8B7355] bg-[#8B7355]/5 rounded-lg">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 h-4 w-4 text-[#8B7355] flex items-center justify-center">
+                            <Check className="w-3 h-3" />
+                          </div>
+                          <div className="ml-3">
+                            <span className="block text-sm font-medium text-gray-900">Online Payment</span>
+                            <span className="block text-sm text-gray-500">This form will redirect you to the WhatsApp in Admin Chat</span>
+                          </div>
                         </div>
-                      </motion.label>
-
-                       <motion.label 
-                        className={`flex items-center p-4 border rounded-lg transition-all cursor-pointer ${
-                          paymentMethod === 'Online' 
-                            ? 'border-[#8B7355] bg-[#8B7355]/5' 
-                            : 'border-gray-200 hover:border-[#8B7355]'
-                        }`}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <input
-                          type="radio"
-                          name="paymentMethod"
-                          value="Online"
-                          checked={paymentMethod === 'Online'}
-                          onChange={() => handlePaymentMethodChange('Online')}
-                          className="h-4 w-4 text-[#8B7355] focus:ring-[#8B7355] border-gray-300"
-                        />
-                        <div className="ml-3">
-                          <span className="block text-sm font-medium text-gray-900">Online Payment</span>
-                          <span className="block text-sm text-gray-500">This form will redirect you to the Whatsapp in Admin Chat </span>
-                        </div>
-                      </motion.label>
-                      
-                     
+                      </div>
                     </div>
                   </motion.div>
                 </div>
